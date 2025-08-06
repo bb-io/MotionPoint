@@ -1,8 +1,8 @@
-using Apps.Appname.Connections;
+using Apps.MotionPoint.Connections;
 using Blackbird.Applications.Sdk.Common.Authentication;
-using Tests.Appname.Base;
+using Tests.MotionPoint.Base;
 
-namespace Tests.Appname;
+namespace Tests.MotionPoint;
 
 [TestClass]
 public class ConnectionValidatorTests : TestBase

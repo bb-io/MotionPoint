@@ -1,7 +1,7 @@
-﻿using Apps.Appname.Actions;
-using Tests.Appname.Base;
+using Apps.MotionPoint.Actions;
+using Tests.MotionPoint.Base;
 
-namespace Tests.Appname;
+namespace Tests.MotionPoint;
 
 [TestClass]
 public class ActionTests : TestBase

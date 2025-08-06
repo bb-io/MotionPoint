@@ -1,7 +1,7 @@
 using Blackbird.Applications.Sdk.Common.Actions;
 using Blackbird.Applications.Sdk.Common.Invocation;
 
-namespace Apps.Appname.Actions;
+namespace Apps.MotionPoint.Actions;
 
 [ActionList]
 public class Actions(InvocationContext invocationContext) : Invocable(invocationContext)

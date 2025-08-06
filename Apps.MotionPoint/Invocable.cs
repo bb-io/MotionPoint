@@ -1,18 +1,19 @@
-using Apps.Appname.Api;
+using Apps.MotionPoint.Api;
 using Blackbird.Applications.Sdk.Common;
 using Blackbird.Applications.Sdk.Common.Authentication;
 using Blackbird.Applications.Sdk.Common.Invocation;
 
-namespace Apps.Appname;
+namespace Apps.MotionPoint;
 
 public class Invocable : BaseInvocable
 {
-    protected AuthenticationCredentialsProvider[] Creds =>
+    protected AuthenticationCredentialsProvider[] Credentials =>
         InvocationContext.AuthenticationCredentialsProviders.ToArray();
 
     protected Client Client { get; }
-    public Invocable(InvocationContext invocationContext) : base(invocationContext)
+
+    protected Invocable(InvocationContext invocationContext) : base(invocationContext)
     {
-        Client = new(Creds);
+        Client = new(Credentials.ToList());
     }
 }
