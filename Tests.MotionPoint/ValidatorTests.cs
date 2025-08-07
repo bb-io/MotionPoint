@@ -1,5 +1,6 @@
 using Apps.MotionPoint.Connections;
 using Blackbird.Applications.Sdk.Common.Authentication;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Tests.MotionPoint.Base;
 
 namespace Tests.MotionPoint;
@@ -12,7 +13,7 @@ public class ConnectionValidatorTests : TestBase
     {
         var validator = new ConnectionValidator();
 
-        var result = await validator.ValidateConnection(Creds, CancellationToken.None);
+        var result = await validator.ValidateConnection(Credentials, CancellationToken.None);
         Console.WriteLine(result.Message);
         Assert.IsTrue(result.IsValid);
     }
@@ -21,7 +22,7 @@ public class ConnectionValidatorTests : TestBase
     public async Task ValidateConnection_InvalidData_ShouldFail()
     {
         var validator = new ConnectionValidator();
-        var newCredentials = Creds
+        var newCredentials = Credentials
             .Select(x => new AuthenticationCredentialsProvider(x.KeyName, x.Value + "_incorrect"));
 
         var result = await validator.ValidateConnection(newCredentials, CancellationToken.None);

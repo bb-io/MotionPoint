@@ -1,6 +1,8 @@
 {
   "ConnectionDefinition": {
-    "token": ""
+    "environment": "",
+    "username": "",
+    "api_key": ""
   },
   "TestFolder": "TestFiles"
 }

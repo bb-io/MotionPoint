@@ -29,6 +29,5 @@ public class ConnectionValidator: IConnectionValidator
                 Message = ex.Message
             };
         }
-
     }
 }

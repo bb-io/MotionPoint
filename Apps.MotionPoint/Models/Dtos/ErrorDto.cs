@@ -14,6 +14,16 @@ public class ErrorDto
 
     public override string ToString()
     {
-        return $"{Status}: {Error}; Request ID: {RequestId}";
+        var errorMessage = $"{Status}: {Error}";
+        if (!string.IsNullOrEmpty(Path))
+        {
+            errorMessage += $" at {Path}";
+        }
+        if (!string.IsNullOrEmpty(RequestId))
+        {
+            errorMessage += $" (Request ID: {RequestId})";
+        }
+        
+        return errorMessage;
     }
 }
