@@ -45,6 +45,14 @@ public class JobActions(InvocationContext invocationContext) : Invocable(invocat
         return new FullJobResponse(job, statistics.TranslationStatistics);
     }
     
+    [Action("Cancel job", Description = "Cancel a specific job by its ID.")]
+    public async Task CancelJob([ActionParameter] GetJobRequest jobRequest)
+    {
+        var queue = await _languageMappingService.GetQueueIdentifierAsync(jobRequest.SourceLanguage, jobRequest.TargetLanguage, jobRequest.Country);
+        var apiRequest = new ApiRequest($"/translationjobs/{jobRequest.JobId}/cancel", queue, Method.Post);
+        await Client.ExecuteWithErrorHandling(apiRequest);
+    }
+    
     private async Task<TranslationStatisticsDto> GetJobStatisticsAsync(string jobId, string queue)
     {
         var statisticsRequest = new ApiRequest($"/translationjobstats/jobs/{jobId}", queue, Method.Post);
