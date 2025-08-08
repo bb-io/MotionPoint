@@ -1,5 +1,6 @@
 ﻿using Apps.MotionPoint.Actions;
 using Apps.MotionPoint.Models.Requests;
+using Blackbird.Applications.Sdk.Common.Files;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using Tests.MotionPoint.Base;
@@ -41,6 +42,49 @@ public class JobActionsTests : TestBase
 
         Assert.IsNotNull(response);
         Assert.AreEqual("7414", response.Id);
+        Console.WriteLine(JsonConvert.SerializeObject(response, Formatting.Indented));
+    }
+
+    [TestMethod]
+    public async Task CreateJob_WithRequiredFields_ReturnsJob()
+    {
+        var actions = new JobActions(InvocationContext, FileManagementClient);
+        var request = new CreateJobRequest
+        {
+            SourceLanguage = "EN",
+            TargetLanguage = "ES",
+            Content = new FileReference
+            {
+                Name = "translatable.html"
+            }
+        };
+
+        var response = await actions.CreateJob(request);
+
+        Assert.IsNotNull(response);
+        Assert.IsNotNull(response.Id);
+        Assert.AreEqual("EN", response.SourceLanguage);
+        Assert.AreEqual("ES", response.TargetLanguage);
+        Console.WriteLine(JsonConvert.SerializeObject(response, Formatting.Indented));
+    }
+
+    [TestMethod]
+    public async Task DownloadTargetFile_WithValidJobId_ReturnsFileWithName()
+    {
+        var actions = new JobActions(InvocationContext, FileManagementClient);
+        var request = new GetJobRequest
+        {
+            SourceLanguage = "EN",
+            TargetLanguage = "ES",
+            JobId = "7446"
+        };
+
+        var response = await actions.DownloadTargetFile(request);
+
+        Assert.IsNotNull(response);
+        Assert.IsNotNull(response.Content);
+        Assert.IsNotNull(response.Content.Name);
+        Assert.IsTrue(!string.IsNullOrEmpty(response.Content.Name), "FileReference.Name should not be empty.");
         Console.WriteLine(JsonConvert.SerializeObject(response, Formatting.Indented));
     }
 }

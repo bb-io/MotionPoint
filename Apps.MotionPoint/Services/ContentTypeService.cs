@@ -24,9 +24,35 @@ public static class ContentTypeService
         { ".png", "image/png" }
     };
 
+    private static readonly Dictionary<string, string> ExtensionMap = new(StringComparer.OrdinalIgnoreCase)
+    {
+        { "application/xml", ".xml" },
+        { "application/arb+json", ".arb" },
+        { "text/html", ".html" },
+        { "text/x-java-properties", ".properties" },
+        { "text/javascript", ".js" },
+        { "application/json", ".json" },
+        { "text/strings", ".strings" },
+        { "text/srt", ".srt" },
+        { "text/microsoft-resx", ".resx" },
+        { "text/plain", ".txt" },
+        { "application/xliff+xml", ".xliff" },
+        { "application/x-xliff+xml", ".xlf" },
+        { "text/csv", ".csv" },
+        { "image/gif", ".gif" },
+        { "image/jpeg", ".jpeg" },
+        { "image/jpg", ".jpg" },
+        { "image/png", ".png" }
+    };
+
     public static string GetContentType(string fileName)
     {
         var extension = Path.GetExtension(fileName);
         return ContentTypeMap.GetValueOrDefault(extension, "application/octet-stream");
+    }
+
+    public static string GetExtensionFromContentType(string contentType)
+    {
+        return ExtensionMap.GetValueOrDefault(contentType, ".bin");
     }
 }

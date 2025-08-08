@@ -5,6 +5,7 @@ using Apps.MotionPoint.Models.Responses;
 using Apps.MotionPoint.Services;
 using Blackbird.Applications.Sdk.Common;
 using Blackbird.Applications.Sdk.Common.Actions;
+using Blackbird.Applications.Sdk.Common.Exceptions;
 using Blackbird.Applications.Sdk.Common.Invocation;
 using Blackbird.Applications.SDK.Extensions.FileManagement.Interfaces;
 using Blackbird.Applications.Sdk.Utils.Extensions.Files;
@@ -50,7 +51,7 @@ public class JobActions(InvocationContext invocationContext, IFileManagementClie
         return new FullJobResponse(job, statistics.TranslationStatistics);
     }
 
-    [Action("Create job", Description = "Create a new translation job with the specified details.")]
+    [Action("Create job (upload file)", Description = "Create a new translation job with the specified details.")]
     public async Task<JobResponse> CreateJob([ActionParameter] CreateJobRequest createJobRequest)
     {
         var queue = await _languageMappingService.GetQueueIdentifierAsync(createJobRequest.SourceLanguage, createJobRequest.TargetLanguage, createJobRequest.Country);
@@ -87,6 +88,29 @@ public class JobActions(InvocationContext invocationContext, IFileManagementClie
         
         var response = await Client.ExecuteWithErrorHandling<JobResponse>(apiRequest);
         return response;
+    }
+    
+    [Action("Download target file", Description = "Download the target file of a specific job by its ID.")]
+    public async Task<FileResponse> DownloadTargetFile([ActionParameter] GetJobRequest jobRequest)
+    {
+        var job = await GetJob(jobRequest);
+        if (job.Status != "COMPLETED")
+        {
+            throw new PluginMisconfigurationException($"Job {jobRequest.JobId} is not completed. Current status: {job.Status}");
+        }
+        
+        var queue = await _languageMappingService.GetQueueIdentifierAsync(jobRequest.SourceLanguage, jobRequest.TargetLanguage, jobRequest.Country);
+        var apiRequest = new ApiRequest($"/translations/jobs/{jobRequest.JobId}", queue, Method.Post);
+        apiRequest.AddHeader("Content-Type", "application/json");
+        
+        var response = await Client.ExecuteWithErrorHandling(apiRequest);
+        var memoryStream = new MemoryStream(response.RawBytes!);
+        memoryStream.Position = 0;
+        
+        var contentType = response.ContentType ?? "application/octet-stream";
+        var fileName = $"{jobRequest.SourceLanguage}_{jobRequest.TargetLanguage}-{jobRequest.JobId}{ContentTypeService.GetExtensionFromContentType(contentType)}";
+        var fileReference = await fileManagementClient.UploadAsync(memoryStream, contentType, fileName);
+        return new(fileReference);
     }
     
     [Action("Cancel job", Description = "Cancel a specific job by its ID.")]
