@@ -17,7 +17,7 @@ public class LanguageMappingService(InvocationContext invocationContext)
         var languagePair = response.LocaleData.FirstOrDefault(x =>
             x.SourceLanguage.Code == sourceLanguage &&
             x.TargetLanguage.Code == targetLanguage &&
-            (string.IsNullOrEmpty(country) || x.TargetLanguage.Country?.Code == country));
+            (string.IsNullOrWhiteSpace(country) || x.TargetLanguage.Country?.Code == country));
 
         if (languagePair == null)
         {
@@ -34,7 +34,7 @@ public class LanguageMappingService(InvocationContext invocationContext)
                 .ToList();
 
             var availableQueuesString = string.Join(";  ", availableQueues);
-            var searchCriteria = string.IsNullOrEmpty(country) 
+            var searchCriteria = string.IsNullOrWhiteSpace(country) 
                 ? $"source language '{sourceLanguage}' and target language '{targetLanguage}'"
                 : $"source language '{sourceLanguage}', target language '{targetLanguage}', and country '{country}'";
 

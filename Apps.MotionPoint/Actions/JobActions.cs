@@ -9,12 +9,11 @@ using Blackbird.Applications.Sdk.Common.Exceptions;
 using Blackbird.Applications.Sdk.Common.Invocation;
 using Blackbird.Applications.SDK.Extensions.FileManagement.Interfaces;
 using Blackbird.Applications.Sdk.Utils.Extensions.Files;
-using Newtonsoft.Json;
 using RestSharp;
 
 namespace Apps.MotionPoint.Actions;
 
-[ActionList("Job")]
+[ActionList("Jobs")]
 public class JobActions(InvocationContext invocationContext, IFileManagementClient fileManagementClient) : Invocable(invocationContext)
 {
     private readonly LanguageMappingService _languageMappingService = new(invocationContext);
@@ -119,12 +118,5 @@ public class JobActions(InvocationContext invocationContext, IFileManagementClie
         var queue = await _languageMappingService.GetQueueIdentifierAsync(jobRequest.SourceLanguage, jobRequest.TargetLanguage, jobRequest.Country);
         var apiRequest = new ApiRequest($"/translationjobs/{jobRequest.JobId}/cancel", queue, Method.Post);
         await Client.ExecuteWithErrorHandling(apiRequest);
-    }
-    
-    private async Task<TranslationStatisticsDto> GetJobStatisticsAsync(string jobId, string queue)
-    {
-        var statisticsRequest = new ApiRequest($"/translationjobstats/jobs/{jobId}", queue, Method.Post);
-        statisticsRequest.AddHeader("Content-Type", "application/json");
-        return await Client.ExecuteWithErrorHandling<TranslationStatisticsDto>(statisticsRequest);
     }
 }
