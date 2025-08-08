@@ -18,11 +18,4 @@ public class Invocable : BaseInvocable
     {
         Client = new(Credentials.ToList());
     }
-    
-    protected async Task<TranslationStatisticsDto> GetJobStatisticsAsync(string jobId, string queue)
-    {
-        var statisticsRequest = new ApiRequest($"/translationjobstats/jobs/{jobId}", queue, Method.Post);
-        statisticsRequest.AddHeader("Content-Type", "application/json");
-        return await Client.ExecuteWithErrorHandling<TranslationStatisticsDto>(statisticsRequest);
-    }
 }

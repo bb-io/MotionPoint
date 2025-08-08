@@ -119,4 +119,11 @@ public class JobActions(InvocationContext invocationContext, IFileManagementClie
         var apiRequest = new ApiRequest($"/translationjobs/{jobRequest.JobId}/cancel", queue, Method.Post);
         await Client.ExecuteWithErrorHandling(apiRequest);
     }
+    
+    private async Task<TranslationStatisticsDto> GetJobStatisticsAsync(string jobId, string queue)
+    {
+        var statisticsRequest = new ApiRequest($"/translationjobstats/jobs/{jobId}", queue, Method.Post);
+        statisticsRequest.AddHeader("Content-Type", "application/json");
+        return await Client.ExecuteWithErrorHandling<TranslationStatisticsDto>(statisticsRequest);
+    }
 }
