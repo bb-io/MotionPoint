@@ -21,7 +21,7 @@ public class JobDataHandler(InvocationContext invocationContext, [ActionParamete
             throw new ArgumentException("You should first input target language before fetching countries.");
         }
         
-        var jobActions = new JobActions(invocationContext);
+        var jobActions = new JobActions(invocationContext, null!);
         var jobs = await jobActions.SearchJobs(new SearchJobRequest
         {
             SourceLanguage = languageRequest.SourceLanguage,

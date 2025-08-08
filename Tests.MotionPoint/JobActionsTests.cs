@@ -12,7 +12,7 @@ public class JobActionsTests : TestBase
     [TestMethod]
     public async Task SearchJobs_WithoutStatuses_ReturnsJobs()
     {
-        var actions = new JobActions(InvocationContext);
+        var actions = new JobActions(InvocationContext, FileManagementClient);
         var request = new SearchJobRequest
         {
             SourceLanguage = "EN",
@@ -29,7 +29,7 @@ public class JobActionsTests : TestBase
     [TestMethod]
     public async Task GetJob_WithValidJobId_ReturnsJob()
     {
-        var actions = new JobActions(InvocationContext);
+        var actions = new JobActions(InvocationContext, FileManagementClient);
         var request = new GetJobRequest
         {
             SourceLanguage = "EN",

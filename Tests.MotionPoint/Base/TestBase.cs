@@ -6,11 +6,11 @@ namespace Tests.MotionPoint.Base;
 
 public class TestBase
 {
-    public IEnumerable<AuthenticationCredentialsProvider> Credentials { get; set; }
+    protected IEnumerable<AuthenticationCredentialsProvider> Credentials { get; set; }
 
-    public InvocationContext InvocationContext { get; set; }
+    protected InvocationContext InvocationContext { get; set; }
 
-    public FileManager FileManager { get; set; }
+    protected FileManagementClient FileManagementClient { get; set; }
 
     protected TestBase()
     {
@@ -23,6 +23,6 @@ public class TestBase
             AuthenticationCredentialsProviders = Credentials,
         };
         
-        FileManager = new FileManager();
+        FileManagementClient = new FileManagementClient();
     }
 }

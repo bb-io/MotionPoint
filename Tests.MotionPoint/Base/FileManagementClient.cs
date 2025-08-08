@@ -4,12 +4,12 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.MotionPoint.Base;
 
-public class FileManager : IFileManagementClient
+public class FileManagementClient : IFileManagementClient
 {
     private readonly string _inputFolder;
     private readonly string _outputFolder;
 
-    public FileManager()
+    public FileManagementClient()
     {
         var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
         var projectDirectory = Directory.GetParent(baseDirectory)?.Parent?.Parent?.Parent?.FullName
