@@ -84,6 +84,40 @@ public class JobActions(InvocationContext invocationContext, IFileManagementClie
         {
             apiRequest.AddParameter("translationType", createJobRequest.TranslationType);
         }
+
+        if (createJobRequest.PathInclude != null)
+        {
+            var commaSeparatedPaths = string.Join(",", createJobRequest.PathInclude);
+            apiRequest.AddParameter("pathInclude", commaSeparatedPaths);
+        }
+        
+        if (createJobRequest.PathExclude != null)
+        {
+            var commaSeparatedPaths = string.Join(",", createJobRequest.PathExclude);
+            apiRequest.AddParameter("pathExclude", commaSeparatedPaths);
+        }
+        
+        if(createJobRequest.ColumnDelimiter != null)
+        {
+            apiRequest.AddParameter("columnDelimiter", createJobRequest.ColumnDelimiter);
+        }
+
+        if (createJobRequest.FirstRowHeader.HasValue)
+        {
+            apiRequest.AddParameter("firstRowHeader", createJobRequest.FirstRowHeader.Value);
+        }
+        
+        if (createJobRequest.ColumnInclude != null)
+        {
+            var commaSeparatedColumns = string.Join(",", createJobRequest.ColumnInclude);
+            apiRequest.AddParameter("columnInclude", commaSeparatedColumns);
+        }
+        
+        if (createJobRequest.ColumnExclude != null)
+        {
+            var commaSeparatedColumns = string.Join(",", createJobRequest.ColumnExclude);
+            apiRequest.AddParameter("columnExclude", commaSeparatedColumns);
+        }
         
         var response = await Client.ExecuteWithErrorHandling<JobResponse>(apiRequest);
         return response;
