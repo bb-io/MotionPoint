@@ -7,6 +7,9 @@ public class JobResponse
     [Display("Job ID")]
     public string Id { get; set; } = string.Empty;
     
+    [Display("Job status")]
+    public string Status { get; set; } = string.Empty;
+    
     [Display("Source language")]
     public string SourceLanguage { get; set; } = string.Empty;
     
@@ -22,9 +25,17 @@ public class JobResponse
     [Display("Receipt date")]
     public DateTime ReceiptDate { get; set; }
 
-    [Display("Status")]
-    public string Status { get; set; } = string.Empty;
+    [Display("Completion date")]
+    public DateTime CompletionDate { get; set; }
 
     [Display("Submitted by")]
     public string SubmittedBy { get; set; } = string.Empty;
+    
+    [Display("Transaction reference ID")]
+    public string TransactionReferenceId { get; set; } = string.Empty;
+    
+    public string GetUserFriendlyName()
+    {
+        return $"[{Id}] {SourceLanguage} to {TargetLanguage} ({Status})";
+    }
 }

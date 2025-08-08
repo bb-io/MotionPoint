@@ -9,9 +9,9 @@ using RestSharp;
 
 namespace Apps.MotionPoint.Api;
 
-public class Client : BlackBirdRestClient
+public class ApiClient : BlackBirdRestClient
 {
-    public Client(List<AuthenticationCredentialsProvider> credentialsProviders) : base(new()
+    public ApiClient(List<AuthenticationCredentialsProvider> credentialsProviders) : base(new()
     {
         BaseUrl = BuildUrl(credentialsProviders: credentialsProviders),
         ThrowOnAnyError = false

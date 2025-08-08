@@ -12,7 +12,7 @@ public class ConnectionValidator: IConnectionValidator
     {
         try
         {
-            var client = new Client(authenticationCredentialsProviders.ToList());
+            var client = new ApiClient(authenticationCredentialsProviders.ToList());
             var request = new RestRequest("/languages");
             
             var response = await client.ExecuteWithErrorHandling(request);

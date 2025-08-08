@@ -1,3 +1,5 @@
+using Apps.MotionPoint.Api;
+using Apps.MotionPoint.Models.Dtos;
 using Apps.MotionPoint.Models.Requests;
 using Apps.MotionPoint.Models.Responses;
 using Apps.MotionPoint.Services;
@@ -16,7 +18,8 @@ public class JobActions(InvocationContext invocationContext) : Invocable(invocat
     [Action("Search jobs", Description = "Search available jobs based on the provided criteria.")]
     public async Task<SearchJobResponse> SearchJobs([ActionParameter] SearchJobRequest searchJobRequest)
     {
-        var apiRequest = new RestRequest("/translationjobs/list", Method.Post);
+        var queue = await _languageMappingService.GetQueueIdentifierAsync(searchJobRequest.SourceLanguage, searchJobRequest.TargetLanguage, searchJobRequest.Country);
+        var apiRequest = new ApiRequest("/translationjobs/list", queue, Method.Post);
         if (searchJobRequest.JobStatuses != null)
         {
             var body = new
@@ -24,12 +27,27 @@ public class JobActions(InvocationContext invocationContext) : Invocable(invocat
                 statuses = searchJobRequest.JobStatuses
             };
             
-            apiRequest = apiRequest.AddJsonBody(body);
+            apiRequest.AddJsonBody(body);
         }
         
-        var queue = await _languageMappingService.GetQueueIdentifierAsync(searchJobRequest.SourceLanguage, searchJobRequest.TargetLanguage, searchJobRequest.Country);
-        apiRequest.AddHeader("X-MotionCore-Queue", queue);
         var jobs = await Client.PaginateAsync<JobResponse>(apiRequest);
         return new(jobs);
+    }
+    
+    [Action("Get job", Description = "Retrieve details of a specific job by its ID.")]
+    public async Task<FullJobResponse> GetJob([ActionParameter] GetJobRequest jobRequest)
+    {
+        var queue = await _languageMappingService.GetQueueIdentifierAsync(jobRequest.SourceLanguage, jobRequest.TargetLanguage, jobRequest.Country);
+        var apiRequest = new ApiRequest($"/translationjobs/{jobRequest.JobId}", queue, Method.Post);
+        var job = await Client.ExecuteWithErrorHandling<JobResponse>(apiRequest);
+        
+        var statistics = await GetJobStatisticsAsync(job.Id, queue);
+        return new FullJobResponse(job, statistics.TranslationStatistics);
+    }
+    
+    private async Task<TranslationStatisticsDto> GetJobStatisticsAsync(string jobId, string queue)
+    {
+        var statisticsRequest = new ApiRequest($"/translationjobstats/jobs/{jobId}", queue, Method.Post);
+        return await Client.ExecuteWithErrorHandling<TranslationStatisticsDto>(statisticsRequest);
     }
 }

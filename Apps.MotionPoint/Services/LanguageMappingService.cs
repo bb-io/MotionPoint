@@ -8,7 +8,7 @@ namespace Apps.MotionPoint.Services;
 
 public class LanguageMappingService(InvocationContext invocationContext)
 {
-    private readonly Client _client = new(invocationContext.AuthenticationCredentialsProviders.ToList());
+    private readonly ApiClient _client = new(invocationContext.AuthenticationCredentialsProviders.ToList());
     public async Task<string> GetQueueIdentifierAsync(string sourceLanguage, string targetLanguage, string? country)
     {
         var apiRequest = new RestRequest("/languages");

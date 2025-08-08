@@ -25,4 +25,22 @@ public class JobActionsTests : TestBase
         Assert.IsTrue(response.Jobs.Count > 0, "Expected at least one job to be returned.");
         Console.WriteLine(JsonConvert.SerializeObject(response, Formatting.Indented));
     }
+
+    [TestMethod]
+    public async Task GetJob_WithValidJobId_ReturnsJob()
+    {
+        var actions = new JobActions(InvocationContext);
+        var request = new GetJobRequest
+        {
+            SourceLanguage = "EN",
+            TargetLanguage = "ES",
+            JobId = "7414"
+        };
+
+        var response = await actions.GetJob(request);
+
+        Assert.IsNotNull(response);
+        Assert.AreEqual("7414", response.Id);
+        Console.WriteLine(JsonConvert.SerializeObject(response, Formatting.Indented));
+    }
 }
