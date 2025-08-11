@@ -1,0 +1,8 @@
+{
+  "ConnectionDefinition": {
+    "environment": "",
+    "username": "",
+    "api_key": ""
+  },
+  "TestFolder": "TestFiles"
+}
