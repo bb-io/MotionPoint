@@ -41,5 +41,6 @@ public class FullJobResponse : JobResponse
         FilesTranslated = translationStatisticsDetailDto.FilesTranslated;
         FilesNotTranslated = translationStatisticsDetailDto.FilesNotTranslated;
         PercentageFilesTranslated = translationStatisticsDetailDto.PercentageFilesTranslated;
+        TranslationJobPages = jobResponse.TranslationJobPages;
     }
 }

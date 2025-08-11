@@ -10,6 +10,7 @@ using Blackbird.Applications.Sdk.Common.Invocation;
 using Blackbird.Applications.SDK.Extensions.FileManagement.Interfaces;
 using Blackbird.Applications.Sdk.Utils.Extensions.Files;
 using RestSharp;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Apps.MotionPoint.Actions;
 
@@ -141,6 +142,11 @@ public class JobActions(InvocationContext invocationContext, IFileManagementClie
         memoryStream.Position = 0;
         
         var contentType = response.ContentType ?? "application/octet-stream";
+        if(job.TranslationJobPages != null && job.TranslationJobPages.Count > 0)
+        {
+            contentType = job.TranslationJobPages.FirstOrDefault()?.ContentType ?? contentType;
+        }
+
         var fileName = $"{jobRequest.SourceLanguage}_{jobRequest.TargetLanguage}-{jobRequest.JobId}{ContentTypeService.GetExtensionFromContentType(contentType)}";
         var fileReference = await fileManagementClient.UploadAsync(memoryStream, contentType, fileName);
         return new(fileReference);
