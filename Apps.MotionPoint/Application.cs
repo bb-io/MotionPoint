@@ -9,7 +9,8 @@ public class Application : IApplication, ICategoryProvider
     {
         get =>
         [
-            ApplicationCategory.MachineTranslationAndMtqe
+            ApplicationCategory.MachineTranslationAndMtqe,
+            ApplicationCategory.LspPortal
         ];
         set { }
     }

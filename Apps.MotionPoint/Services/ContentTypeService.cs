@@ -1,3 +1,5 @@
+using Blackbird.Applications.Sdk.Common.Exceptions;
+
 namespace Apps.MotionPoint.Services;
 
 public static class ContentTypeService
@@ -48,11 +50,25 @@ public static class ContentTypeService
     public static string GetContentType(string fileName)
     {
         var extension = Path.GetExtension(fileName);
-        return ContentTypeMap.GetValueOrDefault(extension, "application/octet-stream");
+        var contentType = ContentTypeMap!.GetValueOrDefault(extension, null);
+        if (string.IsNullOrEmpty(contentType))
+        {
+            var supportedExtensions = string.Join(", ", ContentTypeMap.Keys);
+            throw new PluginMisconfigurationException($"Unsupported file type '{extension}'. Supported file types: {supportedExtensions}");
+        }
+        
+        return contentType;
     }
 
     public static string GetExtensionFromContentType(string contentType)
     {
-        return ExtensionMap.GetValueOrDefault(contentType, ".bin");
+        var extension = ExtensionMap!.GetValueOrDefault(contentType, null);
+        if (string.IsNullOrEmpty(extension))
+        {
+            var supportedContentTypes = string.Join(", ", ExtensionMap.Keys);
+            throw new PluginMisconfigurationException($"Unsupported content type '{contentType}'. Supported content types: {supportedContentTypes}");
+        }
+        
+        return extension;
     }
 }
