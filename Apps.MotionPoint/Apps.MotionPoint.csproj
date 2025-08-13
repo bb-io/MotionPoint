@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
         <Product>MotionPoint [Beta]</Product>
         <Description>MotionPoint offers a platform and services to translate and localize websites with AI-driven technology and human quality assurance.</Description>
-        <Version>1.0.1</Version>
+        <Version>1.0.2</Version>
         <AssemblyName>Apps.MotionPoint</AssemblyName>
     </PropertyGroup>
 
