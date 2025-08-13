@@ -10,7 +10,7 @@ using Blackbird.Applications.Sdk.Common.Invocation;
 using Blackbird.Applications.SDK.Extensions.FileManagement.Interfaces;
 using Blackbird.Applications.Sdk.Utils.Extensions.Files;
 using RestSharp;
-using System.Security.Cryptography.X509Certificates;
+using Newtonsoft.Json;
 
 namespace Apps.MotionPoint.Actions;
 
@@ -70,11 +70,18 @@ public class JobActions(InvocationContext invocationContext, IFileManagementClie
         
         var contentType = ContentTypeService.GetContentType(createJobRequest.Content.Name);
         apiRequest.AddParameter("contentType", contentType);
+
+        var additionalDataDto = new AdditionalDataDto
+        {
+            FileName = createJobRequest.Content.Name,
+        };
         
         if (!string.IsNullOrEmpty(createJobRequest.TransactionReferenceId))
         {
-            apiRequest.AddParameter("transactionReferenceId", createJobRequest.TransactionReferenceId);
+            additionalDataDto.UserAdditionalData = createJobRequest.TransactionReferenceId;
         }
+        
+        apiRequest.AddParameter("transactionReferenceId", JsonConvert.SerializeObject(additionalDataDto, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
         
         if (!string.IsNullOrEmpty(createJobRequest.Comments))
         {
@@ -142,12 +149,21 @@ public class JobActions(InvocationContext invocationContext, IFileManagementClie
         memoryStream.Position = 0;
         
         var contentType = response.ContentType ?? "application/octet-stream";
-        if(job.TranslationJobPages != null && job.TranslationJobPages.Count > 0)
+        if(job.TranslationJobPages != null! && job.TranslationJobPages.Count > 0)
         {
             contentType = job.TranslationJobPages.FirstOrDefault()?.ContentType ?? contentType;
         }
-
+        
         var fileName = $"{jobRequest.SourceLanguage}_{jobRequest.TargetLanguage}-{jobRequest.JobId}{ContentTypeService.GetExtensionFromContentType(contentType)}";
+        var additionalDataDto = job.TransactionReferenceId != null
+            ? JsonConvert.DeserializeObject<AdditionalDataDto>(job.TransactionReferenceId)
+            : null;
+        if (additionalDataDto != null && !string.IsNullOrEmpty(additionalDataDto.FileName))
+        {
+            fileName = additionalDataDto.FileName;
+            contentType = MimeTypes.GetMimeType(fileName);
+        }
+        
         var fileReference = await fileManagementClient.UploadAsync(memoryStream, contentType, fileName);
         return new(fileReference);
     }

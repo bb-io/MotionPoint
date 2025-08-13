@@ -32,7 +32,7 @@ public class JobResponse
     public string SubmittedBy { get; set; } = string.Empty;
 
     [Display("Transaction reference ID")]
-    public string TransactionReferenceId { get; set; } = string.Empty;
+    public string? TransactionReferenceId { get; set; }
 
     [DefinitionIgnore, Display("Translation job pages")]
     public List<TranslationJobPage> TranslationJobPages { get; set; } = new();
