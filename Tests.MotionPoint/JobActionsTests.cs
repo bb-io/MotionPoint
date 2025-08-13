@@ -55,7 +55,7 @@ public class JobActionsTests : TestBase
             TargetLanguage = "ES",
             Content = new FileReference
             {
-                Name = "translatable.html"
+                Name = "translatable3.html"
             }
         };
 
