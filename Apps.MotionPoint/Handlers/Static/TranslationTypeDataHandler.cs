@@ -13,7 +13,7 @@ public class TranslationTypeDataHandler : IStaticDataSourceItemHandler
             new("MTPE", "Machine translation and human post-editing"),
             new("MT_AUTOPE", "Machine translation and automatic post-editing"),
             new("MT_ADAPTIVEQE", "Machine translation and quality estimation evaluation"),
-            new("MT_AUTOPE_WITH_ADAPTIVEQE","Machine translation, automatic post-editing & quality estimation evaluation")
+            new("MT_AUTOPE_WITH_ADAPTIVEQE","Machine translation, automatic post-editing and quality estimation evaluation")
         };
     }
 }
