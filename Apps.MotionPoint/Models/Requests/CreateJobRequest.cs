@@ -14,7 +14,8 @@ public class CreateJobRequest : LanguageRequest
     [Display("Translation reference ID")]
     public string? TransactionReferenceId { get; set; }
     
-    [Display("Translation type"), StaticDataSource(typeof(TranslationTypeDataHandler))]
+    [Display("Translation type", Description = "Translation type must be preconfigured by MotionPoint before using this parameter. Contact support to enable this feature. If not set, translation type will follow the preconfigured workflow for the project, which is normally human translation."),
+        StaticDataSource(typeof(TranslationTypeDataHandler))]
     public string? TranslationType { get; set; }
     
     [Display("(JSON) Path include", Description = "One or more JSONPath selectors defining which string values will be translated")]
