@@ -19,7 +19,7 @@ public class ApiClient : BlackBirdRestClient
     {
         this.AddDefaultHeader("Authorization", credentialsProviders.Get(CredNames.ApiKey).Value);
         this.AddDefaultHeader("X-MotionCore-UserName", credentialsProviders.Get(CredNames.Username).Value);
-        this.AddDefaultHeader("X-MotionCore-ApiId", "1");
+        this.AddDefaultHeader("X-MotionCore-ApiId", credentialsProviders.Get(CredNames.ApiId).Value);
     }
 
     public async Task<List<T>> PaginateAsync<T>(RestRequest request)
