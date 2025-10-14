@@ -28,6 +28,11 @@ public class ConnectionDefinition : IConnectionDefinition
                     DisplayName = "Username",
                     Description = "Your username for accessing the MotionPoint Developer API."
                 },
+                new(CredNames.ApiId)
+                {
+                    DisplayName = "API ID",
+                    Description = "The API ID to use. For sandbox it's always 1.",
+                },
                 new(CredNames.ApiKey)
                 {
                     DisplayName = "API Key",

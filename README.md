@@ -25,6 +25,7 @@ Before connecting your MotionPoint instance to Blackbird, please ensure you have
 - **Environment Information**: Determine whether you will connect to the sandbox (testing) or production environment
 - **API Username**: Obtain a valid API username for your selected environment
 - **API Key**: Secure the corresponding API key for your API user account
+- **API ID**: Only used for production environments. For sandbox environments, this field only accepts: '1'
 
 ## Connecting
 
@@ -34,6 +35,7 @@ Before connecting your MotionPoint instance to Blackbird, please ensure you have
 4. Fill in the following fields:
    - **Environment**: Select your environment (Sandbox or Production)
    - **Username**: Your username for accessing the MotionPoint Developer API
+   - **API ID**: Your API ID (only for production; use '1' for sandbox)
    - **API Key**: Your API key for accessing the MotionPoint Developer API
 5. Click _Connect_
 6. Confirm that the connection has appeared and the status is _Connected_
