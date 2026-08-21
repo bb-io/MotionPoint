@@ -88,6 +88,11 @@ public class JobActions(InvocationContext invocationContext, IFileManagementClie
             apiRequest.AddParameter("comments", createJobRequest.Comments);
         }
         
+        if (!string.IsNullOrEmpty(createJobRequest.CallbackUrl))
+        {
+            apiRequest.AddParameter("callbackUrl", createJobRequest.CallbackUrl);
+        }
+
         if (!string.IsNullOrEmpty(createJobRequest.TranslationType))
         {
             apiRequest.AddParameter("translationType", createJobRequest.TranslationType);

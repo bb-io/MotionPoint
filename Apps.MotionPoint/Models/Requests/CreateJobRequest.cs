@@ -14,6 +14,9 @@ public class CreateJobRequest : LanguageRequest
     [Display("Translation reference ID")]
     public string? TransactionReferenceId { get; set; }
     
+    [Display("Callback URL", Description = "URL that receives the translation workflow event notifications of this job. Use the callback URL of the 'On jobs completed (manual)' event to get notified in Blackbird.")]
+    public string? CallbackUrl { get; set; }
+    
     [Display("Translation type", Description = "Translation type must be preconfigured by MotionPoint before using this parameter. Contact support to enable this feature. If not set, translation type will follow the preconfigured workflow for the project, which is normally human translation."),
         StaticDataSource(typeof(TranslationTypeDataHandler))]
     public string? TranslationType { get; set; }
