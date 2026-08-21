@@ -1,14 +1,26 @@
 using Apps.MotionPoint.Api;
 using Apps.MotionPoint.Models.Dtos;
+using Blackbird.Applications.Sdk.Common.Authentication;
 using Blackbird.Applications.Sdk.Common.Exceptions;
 using Blackbird.Applications.Sdk.Common.Invocation;
 using RestSharp;
 
 namespace Apps.MotionPoint.Services;
 
-public class LanguageMappingService(InvocationContext invocationContext)
+public class LanguageMappingService
 {
-    private readonly ApiClient _client = new(invocationContext.AuthenticationCredentialsProviders.ToList());
+    private readonly ApiClient _client;
+
+    public LanguageMappingService(InvocationContext invocationContext)
+        : this(invocationContext.AuthenticationCredentialsProviders)
+    {
+    }
+
+    public LanguageMappingService(IEnumerable<AuthenticationCredentialsProvider> credentials)
+    {
+        _client = new(credentials.ToList());
+    }
+
     public async Task<string> GetQueueIdentifierAsync(string sourceLanguage, string targetLanguage, string? country)
     {
         var apiRequest = new RestRequest("/languages");

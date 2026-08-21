@@ -52,7 +52,9 @@ Before connecting your MotionPoint instance to Blackbird, please ensure you have
 
 ## Events
 
-- **On job completed**: Polling event that periodically checks for job completion. When a job is completed, it emits an event with the job details and the translated file.
+- **On job completed**: Polling event that periodically checks a single job for completion. When that job is completed, it emits an event with the job details and the translated file.
+- **On any job completed**: Triggered when any job of the selected language pair is completed. Optionally filtered by customer ID.
+- **On jobs completed (manual)**: Triggered when MotionPoint sends a job completion notification to this event's callback URL. Optionally filtered by customer ID.
 
 > Building a simple workflow with MotionPoint requires just two components: the 'Create job (upload file)' action to submit content for translation, and the 'On job completed' event to receive the translated result. Note that using the 'Download target file' action is optional, as the translated file is already included in the event output when a job completes.
 
