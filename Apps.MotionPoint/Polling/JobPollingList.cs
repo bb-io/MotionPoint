@@ -1,4 +1,4 @@
-﻿using Apps.MotionPoint.Actions;
+using Apps.MotionPoint.Actions;
 using Apps.MotionPoint.Api;
 using Apps.MotionPoint.Models.Requests;
 using Apps.MotionPoint.Models.Responses;
@@ -15,34 +15,53 @@ namespace Apps.MotionPoint.Polling;
 public class JobPollingList(InvocationContext invocationContext, IFileManagementClient fileManagementClient) : Invocable(invocationContext)
 {
     private readonly LanguageMappingService _languageMappingService = new(invocationContext);
-    
+
     [PollingEvent("On job completed", Description = "Polling event that checks for completed job.")]
     public async Task<PollingEventResponse<DateMemory, JobCompletedResponse>> OnJobCompleted(PollingEventRequest<DateMemory> request,
         [PollingEventParameter] GetJobRequest jobRequest)
     {
-        var queue = await _languageMappingService.GetQueueIdentifierAsync(jobRequest.SourceLanguage, jobRequest.TargetLanguage, jobRequest.Country);
-        var apiRequest = new ApiRequest($"/translationjobs/{jobRequest.JobId}", queue, Method.Post);
-        apiRequest.AddHeader("Content-Type", "application/json");
-        
-        var job = await Client.ExecuteWithErrorHandling<JobResponse>(apiRequest);
-        if (job.Status != "COMPLETED" || job.CompletionDate < request.Memory?.LastPollingTime)
+        if (request.Memory?.HasFired == true)
         {
             return new()
             {
                 FlyBird = false,
                 Result = null!,
-                Memory = new DateMemory
-                {
-                    LastPollingTime = DateTime.UtcNow
-                }
+                Memory = request.Memory
             };
         }
-        
-        var jobActions = new JobActions(invocationContext, fileManagementClient);
-        var fileResponse = await jobActions.DownloadTargetFile(jobRequest);
+
+        var queue = await _languageMappingService.GetQueueIdentifierAsync(jobRequest.SourceLanguage, jobRequest.TargetLanguage, jobRequest.Country);
+        var apiRequest = new ApiRequest($"/translationjobs/{jobRequest.JobId}", queue, Method.Post);
+        apiRequest.AddHeader("Content-Type", "application/json");
+
+        var job = await Client.ExecuteWithErrorHandling<JobResponse>(apiRequest);
+
+        if (job.Status != "COMPLETED")
+        {
+            return new()
+            {
+                FlyBird = false,
+                Result = null!,
+                Memory = new DateMemory { HasFired = false }
+            };
+        }
+
+        Blackbird.Applications.Sdk.Common.Files.FileReference? content = null;
+        try
+        {
+            var jobActions = new JobActions(invocationContext, fileManagementClient);
+            var fileResponse = await jobActions.DownloadTargetFile(jobRequest);
+            content = fileResponse.Content;
+        }
+        catch (Exception ex)
+        {
+            InvocationContext.Logger?.LogError($"[MotionPoint] Failed to download target file for job {jobRequest.JobId}: {ex.Message}", null);
+        }
+
         return new()
         {
             FlyBird = true,
+            Memory = new DateMemory { HasFired = true },
             Result = new JobCompletedResponse
             {
                 Id = job.Id,
@@ -50,11 +69,7 @@ public class JobPollingList(InvocationContext invocationContext, IFileManagement
                 SourceLanguage = job.SourceLanguage,
                 TargetLanguage = job.TargetLanguage,
                 TargetCountry = job.TargetCountry,
-                Content = fileResponse.Content
-            },
-            Memory = new DateMemory
-            {
-                LastPollingTime = DateTime.UtcNow
+                Content = content
             }
         };
     }
