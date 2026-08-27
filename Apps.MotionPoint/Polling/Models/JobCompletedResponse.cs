@@ -20,5 +20,5 @@ public class JobCompletedResponse
     [Display("Target country")]
     public string TargetCountry { get; set; } = string.Empty;
     
-    public FileReference Content { get; set; } = new();
+    public FileReference? Content { get; set; }
 }

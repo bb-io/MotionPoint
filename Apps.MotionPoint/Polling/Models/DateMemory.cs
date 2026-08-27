@@ -2,5 +2,5 @@
 
 public class DateMemory
 {
-    public DateTime LastPollingTime { get; set; }
+    public bool HasFired { get; set; }
 }

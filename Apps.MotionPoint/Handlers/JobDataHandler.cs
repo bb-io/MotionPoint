@@ -26,7 +26,8 @@ public class JobDataHandler(InvocationContext invocationContext, [ActionParamete
         {
             SourceLanguage = languageRequest.SourceLanguage,
             TargetLanguage = languageRequest.TargetLanguage,
-            Country = languageRequest.Country
+            Country = languageRequest.Country,
+            JobStatuses = ["QUEUED", "ON_HOLD", "COMPLETED", "INVALID_CONTENT"]
         });
         
         return jobs.Jobs
