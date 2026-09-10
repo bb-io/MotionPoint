@@ -22,19 +22,45 @@ public class JobActions(InvocationContext invocationContext, IFileManagementClie
     [Action("Search jobs", Description = "Search available jobs based on the provided criteria.")]
     public async Task<SearchJobResponse> SearchJobs([ActionParameter] SearchJobRequest searchJobRequest)
     {
-        var queue = await _languageMappingService.GetQueueIdentifierAsync(searchJobRequest.SourceLanguage, searchJobRequest.TargetLanguage, searchJobRequest.Country);
-        var apiRequest = new ApiRequest("/translationjobs/list", queue, Method.Post);
-        if (searchJobRequest.JobStatuses != null)
+        var targetLanguages = (searchJobRequest.TargetLanguages ?? [])
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        if (targetLanguages.Count == 0)
         {
-            var body = new
-            {
-                statuses = searchJobRequest.JobStatuses
-            };
-            
-            apiRequest.AddJsonBody(body);
+            throw new PluginMisconfigurationException("At least one target language must be specified.");
         }
-        
-        var jobs = await Client.PaginateAsync<JobResponse>(apiRequest);
+
+        var jobs = new List<JobResponse>();
+        foreach (var targetLanguage in targetLanguages)
+        {
+            var queue = await _languageMappingService.GetQueueIdentifierAsync(
+                searchJobRequest.SourceLanguage,
+                targetLanguage,
+                searchJobRequest.Country);
+            var apiRequest = new ApiRequest("/translationjobs/list", queue, Method.Post);
+            if (searchJobRequest.JobStatuses != null)
+            {
+                var body = new
+                {
+                    statuses = searchJobRequest.JobStatuses
+                };
+
+                apiRequest.AddJsonBody(body);
+            }
+
+            jobs.AddRange(await Client.PaginateAsync<JobResponse>(apiRequest));
+        }
+
+        if (searchJobRequest.CompletionDate.HasValue)
+        {
+            var completionDate = searchJobRequest.CompletionDate.Value.Date;
+            jobs = jobs
+                .Where(x => x.CompletionDate.Date == completionDate)
+                .ToList();
+        }
+
         return new(jobs);
     }
     
