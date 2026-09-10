@@ -17,7 +17,7 @@ public class JobActionsTests : TestBase
         var request = new SearchJobRequest
         {
             SourceLanguage = "EN",
-            TargetLanguage = "ES"
+            TargetLanguages = ["ES"]
         };
 
         var response = await actions.SearchJobs(request);
