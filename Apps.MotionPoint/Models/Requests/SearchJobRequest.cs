@@ -20,6 +20,9 @@ public class SearchJobRequest
     [Display("Job statuses"), StaticDataSource(typeof(JobStatusDataHandler))]
     public IEnumerable<string>? JobStatuses { get; set; }
 
-    [Display("Completion date", Description = "Return jobs completed on this calendar date.")]
-    public DateTime? CompletionDate { get; set; }
+    [Display("Completed after", Description = "Return jobs completed after this date and time.")]
+    public DateTime? CompletedAfter { get; set; }
+
+    [Display("Completed before", Description = "Return jobs completed before this date and time.")]
+    public DateTime? CompletedBefore { get; set; }
 }
