@@ -29,9 +29,6 @@
 
   <ItemGroup>
     <None Remove="appsettings.json" />
-    <EmbeddedResource Include="appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
