@@ -22,7 +22,7 @@ public abstract class LanguageBaseDataHandler(InvocationContext invocationContex
         {
             return response.LocaleData
                 .Where(x => string.IsNullOrEmpty(context.SearchString) || x.SourceLanguage.Name.Contains(context.SearchString, StringComparison.OrdinalIgnoreCase))
-                .Select(x => new DataSourceItem(x.SourceLanguage.Code, x.SourceLanguage.Name))
+                .Select(x => new DataSourceItem(x.SourceLanguage.Code, x.SourceLanguage.Name+" ("+x.SourceLanguage.Country+")"))
                 .DistinctBy(x => x.Value);
         }
         
@@ -33,7 +33,7 @@ public abstract class LanguageBaseDataHandler(InvocationContext invocationContex
         
         return response.LocaleData.Where(x => x.SourceLanguage.Code == languageRequest.SourceLanguage)
             .Where(x => string.IsNullOrEmpty(context.SearchString) || x.TargetLanguage.Name.Contains(context.SearchString, StringComparison.OrdinalIgnoreCase))
-            .Select(x => new DataSourceItem(x.TargetLanguage.Code, x.TargetLanguage.Name))
+            .Select(x => new DataSourceItem(x.TargetLanguage.Code, x.TargetLanguage.Name+" ("+x.TargetLanguage.Country+")"))
             .DistinctBy(x => x.Value);
     }
 }
