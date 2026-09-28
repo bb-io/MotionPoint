@@ -22,7 +22,7 @@ public abstract class LanguageBaseDataHandler(InvocationContext invocationContex
         {
             return response.LocaleData
                 .Where(x => string.IsNullOrEmpty(context.SearchString) || x.SourceLanguage.Name.Contains(context.SearchString, StringComparison.OrdinalIgnoreCase))
-                .Select(x => new DataSourceItem(x.SourceLanguage.Code, x.SourceLanguage.Name+" ("+x.SourceLanguage.Country+")"))
+                .Select(x => new DataSourceItem(x.SourceLanguage.Code, String.IsNullOrEmpty(x.SourceLanguage.Country?.Name)? x.SourceLanguage.Name : x.SourceLanguage.Name + " (" + x.SourceLanguage.Country.Name + ")"))
                 .DistinctBy(x => x.Value);
         }
         
@@ -33,7 +33,7 @@ public abstract class LanguageBaseDataHandler(InvocationContext invocationContex
         
         return response.LocaleData.Where(x => x.SourceLanguage.Code == languageRequest.SourceLanguage)
             .Where(x => string.IsNullOrEmpty(context.SearchString) || x.TargetLanguage.Name.Contains(context.SearchString, StringComparison.OrdinalIgnoreCase))
-            .Select(x => new DataSourceItem(x.TargetLanguage.Code, x.TargetLanguage.Name+" ("+x.TargetLanguage.Country+")"))
+            .Select(x => new DataSourceItem(x.TargetLanguage.Code, String.IsNullOrEmpty(x.TargetLanguage.Country?.Name) ? x.TargetLanguage.Name : x.TargetLanguage.Name + " (" + x.TargetLanguage.Country.Name + ")"))
             .DistinctBy(x => x.Value);
     }
 }
