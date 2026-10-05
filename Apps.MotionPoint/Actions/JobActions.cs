@@ -53,11 +53,17 @@ public class JobActions(InvocationContext invocationContext, IFileManagementClie
             jobs.AddRange(await Client.PaginateAsync<JobResponse>(apiRequest));
         }
 
-        if (searchJobRequest.CompletionDate.HasValue)
+        if (searchJobRequest.CompletedAfter.HasValue)
         {
-            var completionDate = searchJobRequest.CompletionDate.Value.Date;
             jobs = jobs
-                .Where(x => x.CompletionDate.Date == completionDate)
+                .Where(x => x.CompletionDate >= searchJobRequest.CompletedAfter.Value)
+                .ToList();
+        }
+
+        if (searchJobRequest.CompletedBefore.HasValue)
+        {
+            jobs = jobs
+                .Where(x => x.CompletionDate <= searchJobRequest.CompletedBefore.Value)
                 .ToList();
         }
 
