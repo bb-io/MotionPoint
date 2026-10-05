@@ -77,6 +77,13 @@ public class JobActions(InvocationContext invocationContext, IFileManagementClie
         return new FullJobResponse(job, statistics.TranslationStatistics);
     }
 
+    [Action("Get job statistics", Description = "Get translation statistics for a specific job, including page-level statistics.")]
+    public async Task<TranslationStatisticsDto> GetJobStatistics([ActionParameter] GetJobRequest jobRequest)
+    {
+        var queue = await _languageMappingService.GetQueueIdentifierAsync(jobRequest.SourceLanguage, jobRequest.TargetLanguage, jobRequest.Country);
+        return await GetJobStatisticsAsync(jobRequest.JobId, queue);
+    }
+
     [Action("Create job (upload file)", Description = "Create a new translation job with the specified details.")]
     public async Task<JobResponse> CreateJob([ActionParameter] CreateJobRequest createJobRequest)
     {
