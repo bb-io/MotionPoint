@@ -46,6 +46,26 @@ public class JobActionsTests : TestBase
     }
 
     [TestMethod]
+    public async Task GetJobStatistics_WithValidJobId_ReturnsStatistics()
+    {
+        var actions = new JobActions(InvocationContext, FileManagementClient);
+        var request = new GetJobRequest
+        {
+            SourceLanguage = "EN",
+            TargetLanguage = "ES",
+            JobId = "7414"
+        };
+
+        var response = await actions.GetJobStatistics(request);
+
+        Assert.IsNotNull(response);
+        Assert.AreEqual(7414, response.Id);
+        Assert.IsNotNull(response.TranslationStatistics);
+        Assert.IsNotNull(response.TranslationJobPageStatistics);
+        Console.WriteLine(JsonConvert.SerializeObject(response, Formatting.Indented));
+    }
+
+    [TestMethod]
     public async Task CreateJob_WithRequiredFields_ReturnsJob()
     {
         var actions = new JobActions(InvocationContext, FileManagementClient);

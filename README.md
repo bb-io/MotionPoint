@@ -46,6 +46,7 @@ Before connecting your MotionPoint instance to Blackbird, please ensure you have
 
 - **Search jobs**: "Search available jobs based on the provided criteria.
 - **Get job**: Retrieve details of a specific job by its ID.
+- **Get job statistics**: Get translation statistics for a specific job, including page-level statistics.
 - **Create job (upload file)**: Create a new translation job with the specified details.
 - **Download target file**: Download the translated file for a specific job.
 - **Cancel job**: Cancel a specific job by its ID.

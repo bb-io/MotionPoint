@@ -9,11 +9,18 @@ public class ErrorDto
     public long Status { get; set; }
     
     public string Error { get; set; } = string.Empty;
+
+    public string Message { get; set; } = string.Empty;
     
     public string RequestId { get; set; } = string.Empty;
 
     public override string ToString()
     {
+        if (!string.IsNullOrWhiteSpace(Message))
+        {
+            return Message;
+        }
+
         var errorMessage = $"{Status}: {Error}";
         if (!string.IsNullOrEmpty(Path))
         {
