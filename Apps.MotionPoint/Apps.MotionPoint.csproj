@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
         <Product>MotionPoint</Product>
         <Description>MotionPoint offers a platform and services to translate and localize websites with AI-driven technology and human quality assurance.</Description>
-        <Version>1.0.11</Version>
+        <Version>1.0.12</Version>
         <AssemblyName>Apps.MotionPoint</AssemblyName>
     </PropertyGroup>
 
@@ -23,4 +23,7 @@
         <EmbeddedResource CopyToOutputDirectory="Always" Include="image\icon.png" />
     </ItemGroup>
 
+    <ItemGroup>
+        <EmbeddedResource Include="..\README.md" Link="README.md" CopyToOutputDirectory="Always" />
+    </ItemGroup>
 </Project>
